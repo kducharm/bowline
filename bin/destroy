@@ -10,5 +10,7 @@ read confirm;
 
 $DCOMPOSE stop
 $DCOMPOSE rm --force -v
+docker-sync stop
+docker-sync clean
 
 exit 0;
