@@ -24,7 +24,7 @@ if [ ! -e ".git" ]; then
 fi
 
 # Add bowline remote.
-git remote add bowline git@github.com:davenuman/bowline.git
+git remote add bowline git@github.com:kducharm/bowline.git
 git remote update
 
 # Add the Bowline files, except for the readme and install files.
