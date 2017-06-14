@@ -64,7 +64,7 @@ bowline_init () {
   export HOST_GID=$(id -g)
   SLUG=${BOWLINE//-/}  # Fig/Compose doesn't allow the - char.
   SLUG=${SLUG//_/}  # Fig/Compose doesn't allow the _ char.
-  SLUG=$(echo ${SLUG} | tr "[A-Z]" "[a-z]") # Mixed case dirs cause issue with docker image names
+  export SLUG=$(echo ${SLUG} | tr "[A-Z]" "[a-z]") # Mixed case dirs cause issue with docker image names
   DCOMPOSE="docker-compose"
   if [ ! "$(command -v docker-compose)" ];then
     if [ "$(command -v fig)" ];then
@@ -78,6 +78,11 @@ bowline_init () {
     fi
   fi
   DCOMPOSE="$DCOMPOSE -p $SLUG"
+
+  if [ ! "$(command -v docker-sync)" ];then
+      echo "Docker Sync is required for using Bowline"
+      echo "https://github.com/EugenMayer/docker-sync/wiki/1.-Installation"
+  fi
 
   cd $GIT_ROOT
 
