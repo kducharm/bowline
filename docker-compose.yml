@@ -1,12 +1,6 @@
+# Storage
 version: "2"
 services:
-  # Storage
-  filestore:
-    image: civicactions/sshd
-    environment:
-      - HOST_USER=${HOST_UID}:${HOST_GID}
-    volumes:
-      - /var/www
   db:
     image: mariadb:10.1
     environment:
@@ -21,7 +15,6 @@ services:
     expose:
       - "3306"
 
-  # Services
   php:
     image: davenuman/bowline-centos
     command: php-fpm
@@ -30,11 +23,12 @@ services:
       - HOST_USER=${HOST_UID}:${HOST_GID}
     expose:
       - "9000"
-    volumes_from:
-      - filestore
+    volumes:
+      - bowline_filesync:/var/www:nocopy
     links:
       - db:dbhost
     hostname: php_host
+
   web:
     image: davenuman/bowline-centos
     command: httpd -D FOREGROUND -e debug
@@ -46,17 +40,10 @@ services:
       - db:dbhost
       - php:php_host
     volumes_from:
-      - filestore
+      - php
     hostname: drupal
 
-  # File synchronizing
-  sync:
-    image: civicactions/bg-sync
-    volumes:
-      - .:/source
-    volumes_from:
-      - filestore
-    environment:
-      - SYNC_DESTINATION=/var/www
-      - SYNC_WAIT=20
-      - SYNC_VERBOSE=1
+volumes:
+  bowline_filesync:
+    external:
+      name: "${SLUG}_filesync"
