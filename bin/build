@@ -7,8 +7,8 @@ echo "# STARTING CONTAINERS"
 docker_sync_init
 docker-sync start
 
-$DCOMPOSE stop web php
-$DCOMPOSE rm --force web php
+$DCOMPOSE stop web
+$DCOMPOSE rm --force web
 $DCOMPOSE up -d --no-recreate
 
 EXIT=$?

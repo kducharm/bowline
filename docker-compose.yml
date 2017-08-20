@@ -15,24 +15,9 @@ services:
     expose:
       - "3306"
 
-  php:
-    image: kducharm/bowline-centos
-    command: php-fpm
-    environment:
-      - COMPOSER_HOME=/.composer
-      - HOST_USER=${HOST_UID}:${HOST_GID}
-      - HOST_OS=${HOST_OS}
-    expose:
-      - "9000"
-    volumes:
-      - bowline_filesync:/var/www:nocopy
-    links:
-      - db:dbhost
-    hostname: php_host
-
   web:
-    image: kducharm/bowline-centos
-    command: httpd -D FOREGROUND -e debug
+    image: kducharm/drupal-bowline
+    command: apachectl -D FOREGROUND -e debug
     environment:
       - HOST_USER=${HOST_UID}:${HOST_GID}
       - HOST_OS=${HOST_OS}
@@ -40,9 +25,8 @@ services:
       - "80"
     links:
       - db:dbhost
-      - php:php_host
-    volumes_from:
-      - php
+    volumes:
+      - bowline_filesync:/var/www:nocopy
     hostname: drupal
 
 volumes:
