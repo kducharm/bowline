@@ -54,6 +54,7 @@ ADD ./conf/php5/apc.ini /etc/php5/conf.d/apc.ini
 RUN \
   echo xdebug.remote_enable=1 >> /etc/php5/mods-available/xdebug.ini && \
   echo xdebug.remote_autostart=0 >> /etc/php5/mods-available/xdebug.ini && \
+  echo xdebug.idekey="PHPSTORM" >> /opt/rh/php55/root/etc/php.d/xdebug.ini && \
   echo xdebug.max_nesting_level=256 >> /etc/php5/mods-available/xdebug.ini && \
   echo xdebug.remote_log=/var/www/logs/xdebug.log >> /etc/php5/mods-available/xdebug.ini
 
