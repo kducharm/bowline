@@ -26,10 +26,10 @@ chmod ug+rwx /var/www/logs
 
 # Set Docker For Mac xdebug settings since docker0 bridge doesn't exist.
 if [ "${HOST_OS}" = "Darwin" ]; then
-  echo xdebug.remote_host=docker.for.mac.localhost >> /usr/local/etc/php/conf.d/xdebug.ini
-  echo xdebug.remote_connect_back=0 >> /usr/local/etc/php/conf.d/xdebug.ini;
+  echo xdebug.remote_host=docker.for.mac.localhost >> /opt/rh/php55/root/etc/php.d/xdebug.ini
+  echo xdebug.remote_connect_back=0 >> /opt/rh/php55/root/etc/php.d/xdebug.ini;
 else
-  echo xdebug.remote_connect_back=1 >> /usr/local/etc/php/conf.d/xdebug.ini;
+  echo xdebug.remote_connect_back=1 >> /opt/rh/php55/root/etc/php.d/xdebug.ini;
 fi
 
 exec "$@"
