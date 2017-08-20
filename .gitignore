@@ -46,3 +46,4 @@ tests/behat/local.yml
 .drush
 .bash_history
 .docker-sync
+docker-sync.yml
