@@ -80,11 +80,6 @@ bowline_init () {
   fi
   DCOMPOSE="$DCOMPOSE -p $SLUG"
 
-  if [ ! "$(command -v docker-sync)" ];then
-      echo "Docker Sync is required for using Bowline"
-      echo "https://github.com/EugenMayer/docker-sync/wiki/1.-Installation"
-  fi
-
   cd $GIT_ROOT
 
   ### @@ Note, everytime the ip changes the following should run

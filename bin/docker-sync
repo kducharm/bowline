@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+
+which_list="$(which -a docker-sync)"
+
+if [ $(echo "${which_list}" | wc -l) -gt 1 ];then
+  cmd=$(echo "${which_list}" | tail -n1)
+  $cmd $@
+  exit $?
+elif [[ $OSTYPE != "linux-gnu" ]] && [ "$(command -v gem)" ];then
+  echo "You have ruby and Docker Sync is required for using Bowline"
+  echo "https://github.com/EugenMayer/docker-sync/wiki/1.-Installation"
+  exit 1
+fi
+
+# If neither of the above, then continue without docker-sync.
+# This should work for automated testing, but not useful for development.
+
+case "$1" in
+  start)
+    echo Faking docker-sync for test server...
+    docker volume create --name=${SLUG}_filesync
+    docker create -v ${SLUG}_filesync:/var/www --name ${SLUG}_copy alpine
+    docker cp -a ./ ${SLUG}_copy:/var/www
+    ;;
+  clean)
+    docker rm --force ${SLUG}_copy
+    docker volume rm --force ${SLUG}_filesync
+    ;;
+  *)
+    docker volume ls | grep ${SLUG}_filesync
+    ;;
+esac
+
+
