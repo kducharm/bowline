@@ -4,8 +4,10 @@ source $(dirname $0)/../lib/bowline/bowline
 assert_proxy
 
 echo "# STARTING CONTAINERS"
-docker_sync_init
-docker-sync start
+if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
+  docker_sync_init
+  docker-sync start
+fi
 
 $DCOMPOSE stop web php
 $DCOMPOSE rm --force web php

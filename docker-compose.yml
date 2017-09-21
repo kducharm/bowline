@@ -24,8 +24,6 @@ services:
       - HOST_OS=${HOST_OS}
     expose:
       - "9000"
-    volumes:
-      - bowline_filesync:/var/www:nocopy
     links:
       - db:dbhost
     hostname: php_host

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/../lib/bowline/bowline
+assert_running
+assert_composer
+
+#Set Drupal Version to benchmark
+drupal="7"
+
+## Download Drupal
+settingspath=docroot/sites/default
+if [ ! -d "${settingspath}" ];then
+  version="drupal-7"
+  if [ "${drupal}" = "8" ];then
+    version="drupal-8"
+  fi
+
+  composer require drush/drush:8.*
+  docker exec ${web} /var/www/vendor/bin/drush dl --destination=/var/www $version -y
+  [ -d "docroot" ] && mv -v docroot old-docroot
+  mv -v drupal-${drupal}* docroot
+  settings_init
+fi
+
+#File IO Testing
+echo
+echo "File IO Testing"
+echo "###############"
+echo "# Container File IO Testing"
+docker exec ${web} yum -q install time -y >/tmp/yum-out 2>&1
+docker exec -ti ${web} time dd if=/dev/zero of=/var/www/test.dat bs=1024 count=100000
+docker exec -ti ${web} rm /var/www/test.dat
+
+echo
+echo "# Host File IO Testing"
+time dd if=/dev/zero of=docroot/test.dat bs=1024 count=100000
+rm docroot/test.dat
+
+#Database Testing
+echo
+echo "Database + File IO Testing (Drupal Site Install)"
+echo "###############"
+docker exec -ti --user www-data ${web} time /var/www/vendor/drush/drush/drush --root=/var/www/docroot --uri=${WEB_DOMAIN} si -y
+
+
+## NOTES
+# Docker Machine - Native Mac OS
+# docker-machine create --driver virtualbox --virtualbox-cpu-count 2 --virtualbox-disk-size 20000 --virtualbox-memory "8000" vbox
+# docker-machine kill vbox
+# docker run -it -v /Users/kdawg/test:/var/www alpine time dd if=/dev/zero of=/var/www/test.dat bs=1024 count=100000

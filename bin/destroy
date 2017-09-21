@@ -10,7 +10,8 @@ read confirm;
 
 $DCOMPOSE stop
 $DCOMPOSE rm --force -v
-docker-sync stop
-docker-sync clean
-
+if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
+  docker-sync stop
+  docker-sync clean
+fi
 exit 0;

@@ -133,6 +133,11 @@ assert_proxy () {
   echo -e "      - traefik.frontend.rule=Host:${WEB_DOMAIN}" >> $proxyconf_file
 
   DCOMPOSE="$DCOMPOSE -f docker-compose.yml -f $proxyconf_file"
+  if [ "$BOWLINE_FILESYNC" == "docker-sync" ]; then
+    DCOMPOSE="$DCOMPOSE -f docker-compose.docker-sync.yml"
+  else
+    DCOMPOSE="$DCOMPOSE -f docker-compose.nosync.yml"
+  fi
 }
 
 assert_running () {
